@@ -1,0 +1,11 @@
+<%- include("templates/header.ejs") %>
+
+<!-- Unique content to the ejs here -->
+<h1>Log In</h1>
+<form action='/loggingin' method='post'>
+    <input name='username' type='text' placeholder='username'><br>
+    <input name='password' type='password' placeholder='password'>
+    <button>Submit</button>
+</form>
+
+<%- include("templates/footer.ejs") %>

@@ -1,0 +1,11 @@
+<%- include("templates/header.ejs") %>
+
+<!-- Unique content to the ejs here -->
+<h1>Create User</h1>
+<form action='/submitUser' method='post'>
+    <input name='username' type='text' placeholder='username'><br>
+    <input name='password' type='password' placeholder='password'><br>
+    <input name='email' type='text' placeholder='email address'>
+    <button>Submit</button>
+</form>
+<%- include("templates/footer.ejs") %>
