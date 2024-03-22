@@ -1,71 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Top 5 Movies</title>
-  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<%- include('./templates/header.ejs') %>
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  
-  <!-- Load Game CSS -->
-  <link rel="stylesheet" href="game.css">
-  <style>
-  </style>
-</head>
-<body>
+<!-- Link game page CSS -->
+<link rel="stylesheet" href="game.css">
 
-
-  <div class="outer container">
-    <div class="background-image">
-      <img src="marquee.png" alt="Background Image">
-
-      <div class="overlay-card">
-        <div class="card content-card">
-
-          <h1 class="text-center mt-3">Best Known For</h1>
-          <p class="text-center">Guess the actor based on the character and year in the movie.</p>
-          <div class="row justify-content-center">
-            <div class="col-md-6">
-              <div id="guess-section">
-                <label for="actor-guess">Guess the Actor:</label>
-                <input type="text" id="actor-guess" class="form-control mb-2">
-                <button id="check-guess" class="btn btn-primary mb-2">Check</button>
-                <div class="d-flex justify-content-between">
-                  <strong>Guesses Left: <span id="guesses-left">5</span></strong>
-                  <strong>Score: <span id="current-score">1000</span></strong>
+        <img src="marquee.png" alt="Background Image">
+        <div class="overlay-card">
+          <div class="card content-card">
+            <h1 class="text-center mt-3">Best Known For</h1>
+            <p class="text-center">Guess the actor based on the character and year in the movie.</p>
+            <div class="row justify-content-center">
+              <div class="col-md-6">
+                <div id="guess-section">
+                  <label for="actor-guess">Guess the Actor:</label>
+                  <input type="text" id="actor-guess" class="form-control mb-2">
+                  <button id="check-guess" class="btn btn-primary mb-2">Check</button>
+                  <div class="d-flex justify-content-between">
+                    <strong>Guesses Left: <span id="guesses-left">5</span></strong>
+                    <strong>Score: <span id="current-score">1000</span></strong>
+                  </div>
+                  <p id="guess-result" class="alert alert-info mt-2" style="display: none;"></p>
+                  <button id="reveal-movie" class="btn btn-secondary mt-2">Reveal Next Movie</button>
                 </div>
-                <p id="guess-result" class="alert alert-info mt-2" style="display: none;"></p>
-                <button id="reveal-movie" class="btn btn-secondary mt-2">Reveal Next Movie</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="container mt-3">
-      <div class="row justify-content-center">
-        <div class="col-md-6">
-          <% movies.slice().reverse().forEach((movie, index) => { %>
-            <div class="border-card mb-2">  
-              <div class="card movie-card">
-                <div class="card-body">
-                  <p><strong>Clue <%= index + 1 %> - Year: <%= movie.release_year %></strong></p> 
-                  <p><strong>Character: <%= movie.character %></strong></p>
-                  <p><strong>Title: </strong><span class="movie-details" id="movie-details-<%= index %>"><strong><%= movie.title %></strong></span></p>
+      <div class="container mt-3">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <% movies.slice().reverse().forEach((movie, index) => { %>
+              <div class="border-card mb-2">
+                <div class="card movie-card">
+                  <div class="card-body">
+                    <p><strong>Clue <%= index + 1 %> - Year: <%= movie.release_year %></strong></p>
+                    <p><strong>Character: <%= movie.character %></strong></p>
+                    <p><strong>Title: </strong><span class="movie-details" id="movie-details-<%= index %>"><strong><%= movie.title %></strong></span></p>
+                  </div>
                 </div>
               </div>
-            </div>
-          <% }); %>
+            <% }); %>
+          </div>
         </div>
       </div>
-    </div>
 
   <!-- Bootstrap JS (optional, for certain components) -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <!-- Load game script -->
-  <script src="game.js"></script> 
-</body>
-</html>
+  <script src="game.js"></script>
+
+  <%- include("templates/footer.ejs") %>
