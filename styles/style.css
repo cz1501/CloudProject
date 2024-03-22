@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+.appName {
+    color: #ffffff;
+    text-decoration: none !important;
+}
+
 body {
     background-color: #1a1515cb !important;
     font-family: 'Montserrat', sans-serif;
