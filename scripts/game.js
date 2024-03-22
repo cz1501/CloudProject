@@ -5,13 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
   let score = 500;
   let guessScore = 500;
   let guessesLeft = 5;
-  const revealButton = document.getElementById('reveal-character');
+  const revealButton = document.getElementById('reveal-movie');
 
   revealButton.addEventListener('click', function() {
     const characterDetails = document.querySelectorAll('.movie-details');
     const currentScore = document.getElementById('current-score');
     if (revealIndex < characterDetails.length) {
-      characterDetails[revealIndex].style.display = 'inline-block';
+      characterDetails[revealIndex].style.display = 'inline';
       revealIndex++;
       score -= 100;
       if (guessScore > 0) {
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
     } else {
-      alert('All characters revealed!');
+      alert('All movies revealed!');
     }
   });
 
@@ -39,12 +39,12 @@ document.addEventListener('DOMContentLoaded', function() {
       // Display all movie titles and characters
       const movieTitles = document.querySelectorAll('.movie-title');
       movieTitles.forEach((movieTitle) => {
-        movieTitle.style.display = 'block';
+        movieTitle.style.display = 'inline';
       });
 
       const characterDetails = document.querySelectorAll('.movie-details');
       characterDetails.forEach((characterDetail) => {
-        characterDetail.style.display = 'block';
+        characterDetail.style.display = 'inline';
       });
 
     } else {

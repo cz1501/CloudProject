@@ -8,144 +8,64 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  
   <!-- Load Game CSS -->
   <link rel="stylesheet" href="game.css">
+  <style>
+  </style>
 </head>
 <body>
+
+
   <div class="outer container">
-    <img src="marquee.png" alt="Background Image">
-    <div class="container overlay">
-      <h1 class="text-center mt-3">Best Known For</h1>
-      <p class="text-center">Guess the actor based on the character and year in the movie.</p>
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-6">
-            <div id="guess-section">
-              <label for="actor-guess">Guess the Actor:</label>
-              <input type="text" id="actor-guess" class="form-control mb-2">
-              <button id="check-guess" class="btn btn-primary mb-2">Check</button>
-              <div class="d-flex justify-content-between">
-                <strong>Guesses Left: <span id="guesses-left">5</span></strong>
-                <strong>Score: <span id="current-score">1000</span></strong>
-              </div>
-              <p id="guess-result" class="alert alert-info mt-2" style="display: none;"></p>
-              <button id="reveal-character" class="btn btn-secondary mt-2">Reveal Next Character</button>
-            </div>
-          </div>
-        </div>
-        <div class="container mt-3">
+    <div class="background-image">
+      <img src="marquee.png" alt="Background Image">
+
+      <div class="overlay-card">
+        <div class="card content-card">
+
+          <h1 class="text-center mt-3">Best Known For</h1>
+          <p class="text-center">Guess the actor based on the character and year in the movie.</p>
           <div class="row justify-content-center">
             <div class="col-md-6">
-              <% movies.slice().reverse().forEach((movie, index) => { %>
-                <div class="card mb-3">
-                  <div class="card-header">Clue <%= index + 1 %> - Year: <%= movie.release_year %></div>
-                  <div class="card-body">
-                    <div class="movie-title"><strong>Title:</strong> <a href="#" data-index="<%= index %>"><%= movie.title %></a></div>
-                    <strong>Character:</strong> <span class="movie-details" id="movie-details-<%= index %>"><%= movie.character %></span>
-                  </div>
+              <div id="guess-section">
+                <label for="actor-guess">Guess the Actor:</label>
+                <input type="text" id="actor-guess" class="form-control mb-2">
+                <button id="check-guess" class="btn btn-primary mb-2">Check</button>
+                <div class="d-flex justify-content-between">
+                  <strong>Guesses Left: <span id="guesses-left">5</span></strong>
+                  <strong>Score: <span id="current-score">1000</span></strong>
                 </div>
-              <% }); %>
+                <p id="guess-result" class="alert alert-info mt-2" style="display: none;"></p>
+                <button id="reveal-movie" class="btn btn-secondary mt-2">Reveal Next Movie</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
+    <div class="container mt-3">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <% movies.slice().reverse().forEach((movie, index) => { %>
+            <div class="border-card mb-2">  
+              <div class="card movie-card">
+                <div class="card-body">
+                  <p><strong>Clue <%= index + 1 %> - Year: <%= movie.release_year %></strong></p> 
+                  <p><strong>Character: <%= movie.character %></strong></p>
+                  <p><strong>Title: </strong><span class="movie-details" id="movie-details-<%= index %>"><strong><%= movie.title %></strong></span></p>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    </div>
 
   <!-- Bootstrap JS (optional, for certain components) -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <!-- Load game script -->
   <script src="game.js"></script> 
-  <!-- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const actorName = '<%= actorName %>'; // Extract actor's name from the server response
-
-      let revealIndex = 0;
-      let score = 500;
-      let guessScore = 500;
-      let guessesLeft = 5;
-      const revealButton = document.getElementById('reveal-character');
-
-      revealButton.addEventListener('click', function() {
-        const characterDetails = document.querySelectorAll('.movie-details');
-        const currentScore = document.getElementById('current-score');
-        if (revealIndex < characterDetails.length) {
-          characterDetails[revealIndex].style.display = 'inline-block';
-          revealIndex++;
-          score -= 100;
-          if (guessScore > 0) {
-            currentScore.textContent = score + guessScore;
-            currentScore.style.display = "inline-block";
-          } else {
-            currentScore.textContent = score;
-          }
-
-        } else {
-          alert('All characters revealed!');
-        }
-      });
-
-      document.getElementById('check-guess').addEventListener('click', function() {
-        guessesLeft--;
-        document.getElementById('guesses-left').textContent = guessesLeft;
-
-        const guess = document.getElementById('actor-guess').value.trim().toLowerCase();
-        if (guess === actorName.toLowerCase()) {
-          document.getElementById('guess-result').textContent = 'Congratulations! You guessed the correct actor.';
-          document.getElementById('guess-result').style.color = 'green';
-          document.getElementById('guess-result').style.display = 'block';
-
-          // Display all movie titles and characters
-          const movieTitles = document.querySelectorAll('.movie-title');
-          movieTitles.forEach((movieTitle) => {
-            movieTitle.style.display = 'block';
-          });
-
-          const characterDetails = document.querySelectorAll('.movie-details');
-          characterDetails.forEach((characterDetail) => {
-            characterDetail.style.display = 'block';
-          });
-
-        } else {
-          document.getElementById('guess-result').textContent = 'Incorrect. Try again.';
-          document.getElementById('guess-result').style.color = 'red';
-          document.getElementById('guess-result').style.display = 'block';
-          guessScore -= 100;
-          const currentScore = document.getElementById('current-score');
-          currentScore.textContent = score + guessScore;
-          currentScore.style.display = "inline-block";
-
-          if (guessesLeft === 0) {
-            document.getElementById('check-guess').disabled = true;
-            document.getElementById('actor-guess').disabled = true;
-            document.getElementById('reveal-character').disabled = true;
-            document.getElementById('guess-result').textContent = 'Game Over! You have run out of guesses. The actor is ' + actorName + '.';
-            document.getElementById('guess-result').style.color = 'red';
-            document.getElementById('guess-result').style.display = 'block';
-
-            //set the score to 0
-            const currentScore = document.getElementById('current-score');
-            score = 0;
-            currentScore.textContent = 0;
-            currentScore.style.display = "inline-block";
-
-
-             // Display all movie titles and characters
-            const movieTitles = document.querySelectorAll('.movie-title');
-            movieTitles.forEach((movieTitle) => {
-              movieTitle.style.display = 'block';
-            });
-
-            const characterDetails = document.querySelectorAll('.movie-details');
-            characterDetails.forEach((characterDetail) => {
-              characterDetail.style.display = 'block';
-            });
-
-          }
-        }
-      });
-    });
-  </script> -->
 </body>
 </html>
