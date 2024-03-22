@@ -1,0 +1,95 @@
+* {
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #1a1515cb;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold; 
+  }
+
+nav a{
+    color: #000000;
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+    padding: 12px;
+    background-color: white;
+}
+
+nav a:hover{
+    background-color: #000000;
+    color: white;
+}
+
+
+
+.underline_B{
+    border-bottom: 1px solid lightgrey;
+}
+
+.cardi {
+    border: 1px solid lightgrey;
+}
+
+.cardi img{
+    width: 100%;
+}
+
+footer{
+    text-align: center;
+    padding: 12px;
+    color:#000000;
+}
+
+.float_right{
+    clear: both;
+    text-align: center;
+}
+
+.float_left{
+    clear: both;
+    display: none;
+}s
+
+h1{
+    padding: 12px 0px;
+    font-weight: bold;
+    text-align: center;
+}
+
+h2{
+    padding: 8px 0px;
+    font-weight: bold;
+}
+
+.texty p{
+    color: rgb(169, 169, 169);
+}
+
+.logo {
+    padding-top: 5px;
+}
+
+@media screen and (min-width: 768px){
+
+    .float_left{
+        float: left;
+        display: block;
+        width: 10% !important;
+        text-align: left;
+    }
+    
+    .float_right{
+        float: right;
+        width: 90% !important;
+        text-align: right;
+    }
+
+    nav a:hover{
+        background-color: none;
+        text-decoration: none;
+    }
+    
+}
