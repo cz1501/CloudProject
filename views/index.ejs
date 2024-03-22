@@ -8,50 +8,12 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <style>
-    body {
-      background-color: #1a1515cb;
-    }
-    
-    .outer {
-      position: relative;
-      padding: 20px;
-      min-height: 100vh;
-    }
-
-    .overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: rgb(0, 0, 0);
-    z-index: 1; /* Ensure overlay is on top of the image */
-    }
-    
-    .movie-details {
-      display: none;
-    }
-    .movie-title {
-      display: none;
-    }
-    .movie-card {
-      border: 2px solid red;
-      border-radius: 10px;
-      background-color: #ffffcc; /* pale yellow */
-      margin-bottom: 10px;
-    }
-    .card-header {
-      background-color: red;
-      color: yellow;
-      border-bottom: 0;
-      border-radius: 10px 10px 0 0;
-    }
-  </style>
+  <!-- Load Game CSS -->
+  <link rel="stylesheet" href="game.css">
 </head>
 <body>
   <div class="outer container">
-    <img src="../public/marquee.png" alt="Background Image">
+    <img src="marquee.png" alt="Background Image">
     <div class="container overlay">
       <h1 class="text-center mt-3">Best Known For</h1>
       <p class="text-center">Guess the actor based on the character and year in the movie.</p>
@@ -89,9 +51,13 @@
       </div>
     </div>
   </div>
+
+
   <!-- Bootstrap JS (optional, for certain components) -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script>
+  <!-- Load game script -->
+  <script src="game.js"></script> 
+  <!-- <script>
     document.addEventListener('DOMContentLoaded', function() {
       const actorName = '<%= actorName %>'; // Extract actor's name from the server response
 
@@ -180,6 +146,6 @@
         }
       });
     });
-  </script>
+  </script> -->
 </body>
 </html>

@@ -7,7 +7,10 @@ const PORT = process.env.PORT || 3000;
 // Set the view engine to EJS
 app.set('view engine', 'ejs');
 
+// Serve static files
 app.use(express.static('public'));
+app.use(express.static('scripts'));
+app.use(express.static('styles'));
 
 // Example API endpoint for getting actor's details from TMDb
 const tmdbApiKey = 'b4e019928e2da90fea8d583ca41bdd30';
