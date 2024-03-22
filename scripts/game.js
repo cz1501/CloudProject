@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-  const actorName = '<%= actorName %>'; // Extract actor's name from the server response
+  const actorName = document.getElementById('actor-name').textContent; // Extract actor's name from the server response
 
   let revealIndex = 0;
   let score = 500;
@@ -59,8 +59,9 @@ document.addEventListener('DOMContentLoaded', function() {
       if (guessesLeft === 0) {
         document.getElementById('check-guess').disabled = true;
         document.getElementById('actor-guess').disabled = true;
-        document.getElementById('reveal-character').disabled = true;
+        // document.getElementById('reveal-character').disabled = true;
         document.getElementById('guess-result').textContent = 'Game Over! You have run out of guesses. The actor is ' + actorName + '.';
+        console.log('Game Over! You have run out of guesses. The actor is ' + actorName + '.');
         document.getElementById('guess-result').style.color = 'red';
         document.getElementById('guess-result').style.display = 'block';
 

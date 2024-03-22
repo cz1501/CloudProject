@@ -15,7 +15,7 @@ app.use(express.static('styles'));
 
 // Example API endpoint for getting actor's details from TMDb
 const tmdbApiKey = 'b4e019928e2da90fea8d583ca41bdd30';
-const actorId = '1233'; // Replace with the ID of the actor you want to get details for
+const actorId = '287'; // Replace with the ID of the actor you want to get details for
 const actorUrl = `https://api.themoviedb.org/3/person/${actorId}?api_key=${tmdbApiKey}`;
 
 // Example API endpoint for getting actor's movie credits from TMDb

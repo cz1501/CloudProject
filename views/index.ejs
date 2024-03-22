@@ -6,18 +6,24 @@
         <img src="marquee.png" alt="Background Image">
         <div class="overlay-card">
           <div class="card content-card">
-            <h1 class="text-center mt-3">Best Known For</h1>
-            <p class="text-center">Guess the actor based on the character and year in the movie.</p>
+            <h1 class="text-center mt-3">Movie Match</h1>
+            <p class="text-center">Guess the actor based their best known movies and roles.</p>
+            <p class="text-center">Each wrong guess and clue reveal lower your points!</p>
             <div class="row justify-content-center">
               <div class="col-md-6">
                 <div id="guess-section">
-                  <label for="actor-guess">Guess the Actor:</label>
-                  <input type="text" id="actor-guess" class="form-control mb-2">
-                  <button id="check-guess" class="btn btn-primary mb-2">Check</button>
+                  <label for="actor-guess"><strong>Guess the Actor: </strong></label>
+                  <div class="input-group mb-2">
+                    <input type="text" id="actor-guess" class="form-control" aria-label="Guess the Actor" aria-describedby="check-button">
+                    <div class="input-group-append">
+                      <button id="check-guess" class="btn btn-primary" type="button">Check</button>
+                    </div>
+                  </div>
                   <div class="d-flex justify-content-between">
                     <strong>Guesses Left: <span id="guesses-left">5</span></strong>
                     <strong>Score: <span id="current-score">1000</span></strong>
                   </div>
+                  <p id="actor-name" class="alert alert-info mt-2" style="display: none;"><%= actorName %></p>
                   <p id="guess-result" class="alert alert-info mt-2" style="display: none;"></p>
                   <button id="reveal-movie" class="btn btn-secondary mt-2">Reveal Next Movie</button>
                 </div>
