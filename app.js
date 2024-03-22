@@ -24,7 +24,8 @@ const creditsUrl = `https://api.themoviedb.org/3/person/${actorId}/movie_credits
 const navLinks = [
     {name: "Game", link: "/"},
     {name: "Login", link: "/login"},
-    {name: "Register", link: "/register"}
+    {name: "Register", link: "/register"},
+    {name: "Leaderboard", link: "/leaderboard"}
 ]
 
 app.use("/", (req, res, next) => {
@@ -74,6 +75,11 @@ app.get('/register', (req, res) => {
 // GET request for login page
 app.get('/login', (req, res) => {
     res.render('login.ejs')
+});
+
+// GET request for leaderboard page
+app.get('/leaderboard', (req, res) => {
+    res.render('leaderboard.ejs')
 });
 
 // Start the server
