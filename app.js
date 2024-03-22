@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 
+const url = require('url');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -19,6 +20,18 @@ const actorUrl = `https://api.themoviedb.org/3/person/${actorId}?api_key=${tmdbA
 
 // Example API endpoint for getting actor's movie credits from TMDb
 const creditsUrl = `https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=${tmdbApiKey}`;
+
+const navLinks = [
+    {name: "Game", link: "/"},
+    {name: "Login", link: "/login"},
+    {name: "Register", link: "/register"}
+]
+
+app.use("/", (req, res, next) => {
+    app.locals.navLinks = navLinks;
+    app.locals.currentURL = url.parse(req.url).pathname;
+    next();
+});
 
 // Route handler for rendering the EJS template
 app.get('/', async (req, res) => {
@@ -51,6 +64,16 @@ app.get('/', async (req, res) => {
         console.error('Error fetching data from TMDb:', error);
         res.status(500).send('Error fetching data from TMDb');
     }
+});
+
+// GET request for register page
+app.get('/register', (req, res) => {
+    res.render('register.ejs')
+});
+
+// GET request for login page
+app.get('/login', (req, res) => {
+    res.render('login.ejs')
 });
 
 // Start the server
