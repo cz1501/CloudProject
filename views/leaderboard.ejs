@@ -1,5 +1,6 @@
 
 <%- include("templates/header.ejs") %>
+<script src="scripts/leaderboard.js"></script>
     <div class="container leaderboard">
         <h1 class="text-center text-dark" >Leaderboard</h1>
         <table class="table table-striped">
@@ -38,6 +39,8 @@
                 </tr>
             </tbody>
         </table>
+        <h2 class="text-center text-dark">Your Score</h2>
+        <ul id="scoreList"></ul> 
     </div>
 
 <%- include("templates/footer.ejs") %>
