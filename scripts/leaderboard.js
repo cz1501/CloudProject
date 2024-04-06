@@ -11,48 +11,20 @@ function handleKeyPress(event) {
     }
   }
 }
-
-// function addTask() {
-//     const taskInput = document.getElementById('taskInput');
-//     const task = taskInput.value.trim(); // Get task input value
-//     if (!task) return; // Return if task is empty
-  
-//     // Send POST request to server to add task
-//     fetch('/add-task', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify({ task: task })
-//     })
-//     .then(response => {
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//       }
-//       return response.text();
-//     })
-//     .then(data => {
-//       console.log('Task added successfully:', data);
-//       taskInput.value = ''; // Clear task input field
-//       getTasks(); // Refresh task list
-//     })
-//     .catch(error => {
-//       console.error('Error adding task:', error);
-//     });
-//   }
   
   function getLeaderboard() {
     // Send GET request to server to get tasks
     fetch('/get-leaderboard')
     .then(response => {
       if (!response.ok) {
+        console.log(response);
         throw new Error('Network response was not ok');
       }
       return response.json();
     })
     .then(data => {
       console.log('Scores:', data);
-      displayTasks(data); // Display tasks in UI
+      displayLeaderboard(data); // Display scores
     })
     .catch(error => {
       console.error('Error getting tasks:', error);
@@ -61,13 +33,41 @@ function handleKeyPress(event) {
   
   function displayLeaderboard(scores) {
     const scoreList = document.getElementById('scoreList');
-    // scoreList.innerHTML = ''; // Clear previous tasks
-    scores.forEach(task => {
-      const li = document.createElement('li');
-      li.textContent = task.task;
-      scoreList.append(li);
+    scoreList.innerHTML = ''; // Clear previous tasks
+
+    // Sort scores in descending order based on score
+    scores.sort((a, b) => b.Score - a.Score);
+
+    // Create table element with Bootstrap table classes
+    const table = document.createElement('table');
+    table.classList.add('table', 'table-striped');
+
+    // Create table header row
+    const headerRow = table.createTHead().insertRow();
+    const headers = ['Rank', 'Name', 'Score'];
+    headers.forEach(headerText => {
+        const th = document.createElement('th');
+        th.setAttribute('scope', 'col');
+        th.textContent = headerText;
+        headerRow.appendChild(th);
     });
-  }
-  
-  // Load tasks on page load
-  
+
+    // Populate table body with score data
+    const tbody = document.createElement('tbody');
+    scores.forEach((score, index) => {
+        const row = tbody.insertRow();
+        const rankCell = row.insertCell();
+        rankCell.setAttribute('scope', 'row');
+        rankCell.textContent = index + 1; // Rank (1-indexed)
+        const nameCell = row.insertCell();
+        nameCell.textContent = score.Username; // Use username from JSON data
+        const scoreCell = row.insertCell();
+        scoreCell.textContent = score.Score; // Use score from JSON data
+    });
+
+    // Append table body to table
+    table.appendChild(tbody);
+
+    // Append table to scoreList div
+    scoreList.appendChild(table);
+}

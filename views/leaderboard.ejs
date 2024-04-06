@@ -1,46 +1,9 @@
 
 <%- include("templates/header.ejs") %>
-<script src="scripts/leaderboard.js"></script>
+<script src="leaderboard.js"></script>
     <div class="container leaderboard">
         <h1 class="text-center text-dark" >Leaderboard</h1>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Rank</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Player 1</td>
-                    <td>100</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Player 2</td>
-                    <td>90</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Player 3</td>
-                    <td>80</td>
-                </tr>
-                <tr>
-                    <th scope="row">4</th>
-                    <td>Player 4</td>
-                    <td>70</td>
-                </tr>
-                <tr>
-                    <th scope="row">5</th>
-                    <td>Player 5</td>
-                    <td>60</td>
-                </tr>
-            </tbody>
-        </table>
-        <h2 class="text-center text-dark">Your Score</h2>
-        <ul id="scoreList"></ul> 
+        <div id="scoreList"></div> 
     </div>
 
 <%- include("templates/footer.ejs") %>

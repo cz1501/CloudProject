@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 
 const express = require('express');
@@ -12,13 +11,22 @@ const PORT = process.env.PORT || 8080;
 const AWS = require('aws-sdk'); // Import AWS SDK
 const bodyParser = require('body-parser'); // Import bodyParser middleware
 
+// Create DynamoDB DocumentClient
+const docClient = new AWS.DynamoDB.DocumentClient();
+
 const region = process.env.AWS_REGION;
 // const ClientId =
 process.env.COGNITO_CLIENT_ID;
 const ClientId = process.env.COGNITO_CLIENT_ID;
+const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 
 AWS.config.update({
   region: region, // Specify the AWS region
+  credentials: {
+    accessKeyId: accessKeyId,
+    secretAccessKey: secretAccessKey
+  }
 });
 
 const cognito = new AWS.CognitoIdentityServiceProvider();
@@ -192,6 +200,24 @@ app.get('/index', (req, res) => {
 // GET request for leaderboard page
 app.get('/leaderboard', (req, res) => {
     res.render('leaderboard.ejs')
+});
+
+// GET request for leaderboard page
+app.get('/get-leaderboard', (req, res) => {
+    // DynamoDB params
+  const params = {
+    TableName: 'comp3962-actor-match' // Specify your DynamoDB table name
+  };
+  // Scan DynamoDB table to get all items
+  docClient.scan(params, (err, data) => {
+    if (err) {
+      console.error('Unable to get tasks. Error JSON:', JSON.stringify(err, null, 2));
+      res.status(500).send('Error getting tasks');
+    } else {
+      console.log('Get tasks successful:', data.Items);
+      res.status(200).json(data.Items); // Return tasks as JSON response
+    }
+  });
 });
 
 // Start the server
