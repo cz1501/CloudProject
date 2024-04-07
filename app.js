@@ -10,6 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const AWS = require('aws-sdk'); // Import AWS SDK
 const bodyParser = require('body-parser'); // Import bodyParser middleware
+const jwt = require('jsonwebtoken'); // Import jsonwebtoken library
 
 // Create DynamoDB DocumentClient
 const docClient = new AWS.DynamoDB.DocumentClient();
@@ -70,6 +71,22 @@ const navLinks = [
     {name: "Leaderboard", link: "/leaderboard"}
 ]
 
+// Function to decode the ID token and extract user information
+function decodeIdToken(idToken) {
+  try {
+    const decoded = jwt.decode(idToken, { complete: true });
+    if (decoded && decoded.payload) {
+      const { sub: userSub, email: userEmail } = decoded.payload;
+      return { userSub, userEmail };
+    } else {
+      return null; // Invalid token or missing payload
+    }
+  } catch (error) {
+    console.error('Error decoding ID token:', error);
+    return null;
+  }
+}
+
 app.use((req, res, next) => {
     app.locals.navLinks = navLinks;
     app.locals.currentURL = url.parse(req.url).pathname;
@@ -80,7 +97,7 @@ app.get('/ejsPage', (req, res) => {
     res.render('login.ejs'); // This will render ejsPage.ejs
 });
 
-
+// User authentication route
 app.post('/loggingin', async (req,res) => {
   var username = req.body.username;
   var password = req.body.password;
@@ -102,6 +119,18 @@ app.post('/loggingin', async (req,res) => {
     if (authResult.AuthenticationResult) {
       // Authentication successful, redirect the user to main.html
       console.log('Successfully authenticated!')
+      const accessToken = authResult.AuthenticationResult.AccessToken;
+      // localStorage.setItem('accessToken', accessToken);
+      console.log('Access token:', accessToken);
+      idToken= authResult.AuthenticationResult.IdToken;
+      // Decode the ID token and extract user information
+    const userInfo = decodeIdToken(idToken);
+      if (userInfo) {
+        console.log('User Sub:', userInfo.userSub);
+        console.log('User Email:', userInfo.userEmail);
+      } else {
+        console.log('Failed to decode ID token or missing user information');
+      }
       res.redirect('/index');
     }
   } catch (error) {
@@ -113,14 +142,13 @@ app.post('/loggingin', async (req,res) => {
       res.status(500).json({ message: 'Internal server error' });
     }
   }
-
-
 });
 
 app.post('/register', async (req,res) => {
   var username = req.body.username;
   var password = req.body.password;
   var email = req.body.email;
+  console.log(ClientId)
   const params = {
     ClientId: ClientId,
     Username: username,
@@ -217,6 +245,32 @@ app.get('/get-leaderboard', (req, res) => {
       console.log('Get tasks successful:', data.Items);
       res.status(200).json(data.Items); // Return tasks as JSON response
     }
+  });
+});
+
+app.post('/add-score', (req, res) => {
+
+  docClient.scan(params, (err, data) => {
+
+    // Add the task to DynamoDB
+    const addParams = {
+      TableName: 'comp3962-actor-match',
+      Item: {
+        'actor-match': 'actor-match', // Partition key
+        'Username': `myName`, // Primary key attribute
+        'Score': 123// Task description
+      }
+    };
+
+    docClient.put(addParams, (err, data) => {
+      if (err) {
+        console.error('Unable to add task to DynamoDB:', err);
+        return res.status(500).send('Error adding task to DynamoDB');
+      }
+
+      console.log('Added task to DynamoDB:', task);
+      res.status(200).send('Task added successfully');
+    });
   });
 });
 
