@@ -14,12 +14,47 @@ app.use(express.static('scripts'));
 app.use(express.static('styles'));
 
 // Example API endpoint for getting actor's details from TMDb
+const tmdbActorIdList = [
+    1373737, 1136406, 224513, 56734, 192, 6161, 31, 12835, 2524, 9780, 73457, 1245, 2231, 517, 1190668, 3293, 1620, 16828, 37625, 71580, 287, 934, 8784, 3223, 18918, 115440, 10859, 74568, 543261, 3896, 1269, 118545, 5292, 6193, 2037, 6885
+];
 const tmdbApiKey = 'b4e019928e2da90fea8d583ca41bdd30';
-const actorId = '287'; // Replace with the ID of the actor you want to get details for
-const actorUrl = `https://api.themoviedb.org/3/person/${actorId}?api_key=${tmdbApiKey}`;
-
+let actorId = tmdbActorIdList[0] ; // Replace with the ID of the actor you want to get details for
+let actorUrl = `https://api.themoviedb.org/3/person/${actorId}?api_key=${tmdbApiKey}`;
 // Example API endpoint for getting actor's movie credits from TMDb
-const creditsUrl = `https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=${tmdbApiKey}`;
+let creditsUrl = `https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=${tmdbApiKey}`;
+
+
+// Details for the refreshing the chosen actor for the day
+function periodicCheck() {
+
+    const currentDate = new Date();
+    const timeDifference = currentDate.getTime() - periodicCheck.lastDate.getTime();
+
+    if (timeDifference / (1000 * 60 * 60) >= 24) {
+        periodicCheck.lastDate = currentDate;
+        periodicCheck.index = (periodicCheck.index + 1) % tmdbActorIdList.length;
+        console.log("new index:"+ periodicCheck.index);
+        // periodicCheck.lastDate.setHours(12, 0, 0, 0);
+        updateActor();
+    }
+}
+
+function updateActor() {
+    let listIndex = Math.floor(((periodicCheck.lastDate.getTime() - periodicCheck.firstDate.getTime()) / (1000 * 60 * 60 * 24)) % tmdbActorIdList.length);
+    console.log("list index:"+ listIndex);
+    actorId = tmdbActorIdList[listIndex];
+    console.log("new actor id:"+ actorId);
+    console.log(periodicCheck.lastDate.getTime());
+    console.log(periodicCheck.firstDate.getTime());
+    actorUrl = `https://api.themoviedb.org/3/person/${actorId}?api_key=${tmdbApiKey}`;
+    creditsUrl = `https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=${tmdbApiKey}`;
+}
+
+periodicCheck.firstDate = new Date();
+periodicCheck.lastDate = new Date();
+periodicCheck.index = 0;
+
+const interval = setInterval(periodicCheck, 1000 * 60 * 60);
 
 const navLinks = [
     {name: "Game", link: "/"},
@@ -37,6 +72,8 @@ app.use("/", (req, res, next) => {
 // Route handler for rendering the EJS template
 app.get('/', async (req, res) => {
     try {
+        
+
         // Fetch actor's details from TMDb
         const actorResponse = await axios.get(actorUrl);
         const actorName = actorResponse.data.name;
