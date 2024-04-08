@@ -263,7 +263,7 @@ app.get('/leaderboard', (req, res) => {
 app.get('/get-leaderboard', (req, res) => {
     // DynamoDB params
     const params = {
-      TableName: 'comp3962-actor-match-scores',
+      TableName: 'comp3962-actor-match-weekly-score',
     };
   // Scan DynamoDB table to get all items
   docClient.scan(params, (err, data) => {
