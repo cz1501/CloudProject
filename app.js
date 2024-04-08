@@ -11,7 +11,6 @@ const PORT = process.env.PORT || 80;
 const AWS = require('aws-sdk'); // Import AWS SDK
 const bodyParser = require('body-parser'); // Import bodyParser middleware
 const jwt = require('jsonwebtoken'); // Import jsonwebtoken library
-// const { writeToDynamoDB } = require('./dynamoDBUtils');
 
 // Create DynamoDB DocumentClient
 const docClient = new AWS.DynamoDB.DocumentClient();
@@ -57,9 +56,6 @@ app.use(express.static('public'));
 app.use(express.static('scripts'));
 app.use(express.static('styles'));
 
-// app.get('/', (req, res) => {
-//     res.redirect('/login');
-// });
 
 // Example API endpoint for getting actor's details from TMDb
 const tmdbActorIdList = [
@@ -201,7 +197,6 @@ app.post('/register', async (req,res) => {
     console.log('User registered successfully:', data);
 
     // Send a success response back to the client
-    // res.redirect('/main.html');
     res.send('User registered successfully');
   } catch (error) {
     // Handle errors
