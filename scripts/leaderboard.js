@@ -23,7 +23,6 @@ function handleKeyPress(event) {
       return response.json();
     })
     .then(data => {
-      console.log('Scores:', data);
       displayLeaderboard(data); // Display scores
     })
     .catch(error => {
@@ -33,11 +32,10 @@ function handleKeyPress(event) {
   
   function displayLeaderboard(scores) {
     const scoreList = document.getElementById('scoreList');
-    console.log(scores);
     scoreList.innerHTML = ''; // Clear previous tasks
 
     // Sort scores in descending order based on score
-    scores.sort((a, b) => b.Score - a.Score);
+    scores.sort((a, b) => b['total-score'] - a['total-score']);
 
     // Create table element with Bootstrap table classes
     const table = document.createElement('table');
@@ -61,9 +59,9 @@ function handleKeyPress(event) {
         rankCell.setAttribute('scope', 'row');
         rankCell.textContent = index + 1; // Rank (1-indexed)
         const nameCell = row.insertCell();
-        nameCell.textContent = score.Username; // Use username from JSON data
+        nameCell.textContent = score.username; // Use username from JSON data
         const scoreCell = row.insertCell();
-        scoreCell.textContent = score.Score; // Use score from JSON data
+        scoreCell.textContent = score['total-score']; // Use score from JSON data
     });
 
     // Append table body to table
