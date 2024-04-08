@@ -74,7 +74,7 @@ function periodicCheck() {
 
     if (timeDifference / (1000 * 60 * 60) >= 24) {
         periodicCheck.lastDate = currentDate;
-        periodicCheck.index = (periodicCheck.index + 1) % tmdbActorIdList.length;
+        periodicCheck.index =  Math.floor(((periodicCheck.lastDate.getTime() - periodicCheck.firstDate.getTime()) / (1000 * 60 * 60 * 24)) % tmdbActorIdList.length);
         console.log("new index:"+ periodicCheck.index);
         // periodicCheck.lastDate.setHours(12, 0, 0, 0);
         updateActor();
@@ -92,9 +92,10 @@ function updateActor() {
     creditsUrl = `https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=${tmdbApiKey}`;
 }
 
-periodicCheck.firstDate = new Date();
+periodicCheck.firstDate = new Date(2024, 3, 7, 10, 30, 0);
 periodicCheck.lastDate = new Date();
-periodicCheck.index = 0;
+periodicCheck();
+updateActor();
 
 const interval = setInterval(periodicCheck, 1000 * 60 * 60);
 
