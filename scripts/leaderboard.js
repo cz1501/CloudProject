@@ -23,7 +23,6 @@ function handleKeyPress(event) {
       return response.json();
     })
     .then(data => {
-      console.log('Scores:', data);
       displayLeaderboard(data); // Display scores
     })
     .catch(error => {
@@ -33,7 +32,6 @@ function handleKeyPress(event) {
   
   function displayLeaderboard(scores) {
     const scoreList = document.getElementById('scoreList');
-    console.log(scores);
     scoreList.innerHTML = ''; // Clear previous tasks
 
     // Sort scores in descending order based on score
