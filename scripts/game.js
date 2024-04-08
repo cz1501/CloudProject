@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('guess-result').style.display = 'block';
       // Send the score to the server
       recordScoreToDynamoDB(score + guessScore);
-      recordWeeklyScoreToDynamoDB(score + guessScore);
 
       // Display all movie titles and characters
       const movieTitles = document.querySelectorAll('.movie-title');
@@ -111,26 +110,5 @@ function recordScoreToDynamoDB(score) {
   })
   .catch(error => {
     console.error('Error sending score to server:', error);
-  });
-}
-
-function recordWeeklyScoreToDynamoDB(score) {
-  const postData = { score }; // Create an object with the score
-
-  fetch('/update-weekly-score', { // Route for updating weekly score
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(postData) // Convert the data to JSON format
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    console.log('Successfully connected to DynamoDB for weekly score update');
-  })
-  .catch(error => {
-    console.error('Error sending weekly score to server:', error);
   });
 }
