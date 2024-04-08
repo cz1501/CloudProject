@@ -1,3 +1,5 @@
+
+
 document.addEventListener('DOMContentLoaded', function() {
   const actorName = document.getElementById('actor-name').textContent; // Extract actor's name from the server response
 
@@ -35,6 +37,8 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('guess-result').textContent = 'Congratulations! You guessed the correct actor.';
       document.getElementById('guess-result').style.color = 'green';
       document.getElementById('guess-result').style.display = 'block';
+      // Send the score to the server
+      writeToDynamoDB(score);
 
       // Display all movie titles and characters
       const movieTitles = document.querySelectorAll('.movie-title');
@@ -87,3 +91,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
+function writeToDynamoDB(score) {
+  const postData = { score }; // Create an object with the score
+
+  fetch('/record-score', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(postData) // Convert the data to JSON format
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    console.log('Successfully connected to DynamoDB');
+  })
+  .catch(error => {
+    console.error('Error sending score to server:', error);
+  });
+}
