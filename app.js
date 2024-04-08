@@ -165,20 +165,7 @@ app.post('/loggingin', async (req,res) => {
       req.session.idToken = authResult.AuthenticationResult.IdToken;
       // Decode the ID token and extract user information
       const accessToken = jwt.decode(authResult.AuthenticationResult.AccessToken);
-      // console.log(accessToken.username)
       req.session.username = accessToken.username;
-      // console.log(req.session.username);
-      // console.log(req.session.username)
-      // console.log(`Access Token Decrypted`);
-      // console.log(accessToken);
-      // const userInfo = decodeIdToken(req.session.idToken);
-      // if (userInfo) {
-      //   console.log('User Sub:', userInfo.userSub);
-      //   console.log('User Email:', userInfo.userEmail);
-      //   console.log(userInfo);
-      // } else {
-      //   console.log('Failed to decode ID token or missing user information');
-      // }
 
       res.redirect('/index');
     }
@@ -297,61 +284,33 @@ app.get('/get-leaderboard', (req, res) => {
   });
 });
 
-// app.post('/add-score', (req, res) => {
-
-//   docClient.scan(params, (err, data) => {
-
-//     // Add the task to DynamoDB
-//     const params = {
-//       TableName: 'comp3962-actor-match-scores',
-//       Item: {
-//         'user-id': req.session, // Partition key
-//         'Username': `myName`, // Primary key attribute
-//         'Score': 123// Task description
-//       }
-//     };
-
-//     docClient.put(addParams, (err, data) => {
-//       if (err) {
-//         console.error('Unable to add task to DynamoDB:', err);
-//         return res.status(500).send('Error adding task to DynamoDB');
-//       }
-
-//       console.log('Added task to DynamoDB:', task);
-//       res.status(200).send('Task added successfully');
-//     });
-//   });
-// });
-
 app.post('/record-score', async (req, res) => {
-  const userInfo = decodeIdToken(req.session.idToken);
-  // console.log(userInfo);
-  // console.log(req.session.username);
-  const score = req.body.score;
-  const username = req.session.username;
-  const userID = userInfo.userSub;
-  // console.log(username);
-  // console.log(userID);
+  if (req.session.idToken) {
+    const userInfo = decodeIdToken(req.session.idToken);
+    const score = req.body.score;
+    const username = req.session.username;
+    const userID = userInfo.userSub;
 
-  const params = {
-    TableName: 'comp3962-actor-match-scores',
-    Item: {
-      'userID': userID,
-      'Username': username,
-      'Score': score
-    }
-  };
+    const params = {
+      TableName: 'comp3962-actor-match-scores',
+      Item: {
+        'userID': userID,
+        'Username': username,
+        'Score': score
+      }
+    };
 
-  // // Logic to write data to DynamoDB using AWS SDK
-  docClient.put(params, (err, data) => {
-    if (err) {
-      console.error('Unable to write to DynamoDB:', err);
-      res.sendStatus(500); // Send error response
-    } else {
-      console.log('Successfully wrote to DynamoDB:', data);
-      res.sendStatus(200); // Send success response
-    }
-  });
+    // // Logic to write data to DynamoDB using AWS SDK
+    docClient.put(params, (err, data) => {
+      if (err) {
+        console.error('Unable to write to DynamoDB:', err);
+        res.sendStatus(500); // Send error response
+      } else {
+        console.log('Successfully wrote to DynamoDB:', data);
+        res.sendStatus(200); // Send success response
+      }
+    });
+  }
 });
 
 // Start the server
