@@ -57,7 +57,7 @@ app.use(express.static('styles'));
 
 // Example API endpoint for getting actor's details from TMDb
 const tmdbActorIdList = [
-    1373737, 1136406, 224513, 56734, 192, 6161, 31, 12835, 2524, 9780, 73457, 1245, 2231, 517, 1190668, 3293, 1620, 16828, 37625, 71580, 287, 934, 8784, 3223, 18918, 115440, 10859, 74568, 543261, 3896, 1269, 118545, 5292, 6193, 2037, 6885
+    1373737, 192, 1136406, 224513, 56734, 6161, 31, 12835, 2524, 9780, 73457, 1245, 2231, 517, 1190668, 3293, 1620, 16828, 37625, 71580, 287, 934, 8784, 3223, 18918, 115440, 10859, 74568, 543261, 3896, 1269, 118545, 5292, 6193, 2037, 6885
 ];
 const tmdbApiKey = 'b4e019928e2da90fea8d583ca41bdd30';
 let actorId = tmdbActorIdList[0] ; // Replace with the ID of the actor you want to get details for
@@ -74,7 +74,7 @@ function periodicCheck() {
 
     if (timeDifference / (1000 * 60 * 60) >= 24) {
         periodicCheck.lastDate = currentDate;
-        periodicCheck.index = (periodicCheck.index + 1) % tmdbActorIdList.length;
+        periodicCheck.index =  Math.floor(((periodicCheck.lastDate.getTime() - periodicCheck.firstDate.getTime()) / (1000 * 60 * 60 * 24)) % tmdbActorIdList.length);
         console.log("new index:"+ periodicCheck.index);
         // periodicCheck.lastDate.setHours(12, 0, 0, 0);
         updateActor();
@@ -92,9 +92,10 @@ function updateActor() {
     creditsUrl = `https://api.themoviedb.org/3/person/${actorId}/movie_credits?api_key=${tmdbApiKey}`;
 }
 
-periodicCheck.firstDate = new Date();
+periodicCheck.firstDate = new Date(2024, 3, 7, 10, 30, 0);
 periodicCheck.lastDate = new Date();
-periodicCheck.index = 0;
+periodicCheck();
+updateActor();
 
 const interval = setInterval(periodicCheck, 1000 * 60 * 60);
 
