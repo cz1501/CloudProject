@@ -17,8 +17,6 @@ const jwt = require('jsonwebtoken'); // Import jsonwebtoken library
 const docClient = new AWS.DynamoDB.DocumentClient();
 
 const region = process.env.AWS_REGION;
-// const ClientId =
-process.env.COGNITO_CLIENT_ID;
 const ClientId = process.env.COGNITO_CLIENT_ID;
 const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
