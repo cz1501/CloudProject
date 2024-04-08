@@ -294,22 +294,48 @@ app.get('/leaderboard', (req, res) => {
     res.render('leaderboard.ejs')
 });
 
-// GET request for leaderboard page
 app.get('/get-leaderboard', (req, res) => {
-    // DynamoDB params
-    const params = {
-      TableName: 'comp3962-actor-match-weekly-score',
-    };
-  // Scan DynamoDB table to get all items
+  // Get the start date of the current week
+  const currentDateTime = new Date();
+  const startOfWeek = new Date(currentDateTime.getFullYear(), currentDateTime.getMonth(), currentDateTime.getDate() - currentDateTime.getDay());
+  // Format the start date of the week
+  const formattedDate = startOfWeek.toISOString().split('T')[0];
+
+  // DynamoDB params with FilterExpression
+  const params = {
+    TableName: 'comp3962-actor-match-weekly-score',
+    FilterExpression: 'WeekStartDate = :date',
+    ExpressionAttributeValues: {
+      ':date': formattedDate
+    }
+  };
+
+  // Scan DynamoDB table to get items with the specified sort key
   docClient.scan(params, (err, data) => {
     if (err) {
-      console.error('Unable to get tasks. Error JSON:', JSON.stringify(err, null, 2));
-      res.status(500).send('Error getting tasks');
+      console.error('Unable to get leaderboard data. Error JSON:', JSON.stringify(err, null, 2));
+      res.status(500).send('Error getting leaderboard data');
     } else {
-      res.status(200).json(data.Items); // Return tasks as JSON response
+      res.status(200).json(data.Items); // Return items as JSON response
     }
   });
 });
+// GET request for leaderboard page
+// app.get('/get-leaderboard', (req, res) => {
+//     // DynamoDB params
+//     const params = {
+//       TableName: 'comp3962-actor-match-weekly-score',
+//     };
+//   // Scan DynamoDB table to get all items
+//   docClient.scan(params, (err, data) => {
+//     if (err) {
+//       console.error('Unable to get tasks. Error JSON:', JSON.stringify(err, null, 2));
+//       res.status(500).send('Error getting tasks');
+//     } else {
+//       res.status(200).json(data.Items); // Return tasks as JSON response
+//     }
+//   });
+// });
 
 // POST request for recording score to DynamoDB
 app.post('/record-score', async (req, res) => {
@@ -361,10 +387,9 @@ app.post('/record-score', async (req, res) => {
           });
 
           // Once individual score is recorded, update weekly score
-          // Implement logic to update weekly score here
           const startOfWeek = new Date(currentDateTime.getFullYear(), currentDateTime.getMonth(), currentDateTime.getDate() - currentDateTime.getDay());
           // Format the start date of the week
-          const formattedDate = startOfWeek.toISOString().split('T')[0]; // Extract year, month, and day
+          const formattedDate = startOfWeek.toISOString().split('T')[0];
 
           // Check if the user already has an entry in the weekly score table
           const getParams = {
