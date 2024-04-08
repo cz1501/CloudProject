@@ -38,8 +38,6 @@ app.use(session({
 
 // Set the view engine to EJS
 app.set('view engine', 'ejs');
-
-app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // parse application/x-www-form-urlencoded
@@ -167,10 +165,42 @@ app.post('/loggingin', async (req,res) => {
     // Handle authentication errors
     if (error.code === 'NotAuthorizedException') {
       res.send('Incorrect username or password')
+    } else if (error.code === 'UserNotConfirmedException') {
+      res.redirect('/confirm-registration');
     } else {
       console.error('Authentication error:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
+  }
+});
+
+// User confirmation route
+app.post('/confirmation', async (req,res) => {
+  var username = req.body.username;
+  var confirmationCode = req.body.confirmation;
+
+  const params = {
+    // AuthFlow: 'USER_PASSWORD_AUTH',
+    ClientId: ClientId,
+    ConfirmationCode: confirmationCode,
+    Username: username
+  };
+
+  try {
+    // Call the ConfirmSignUp operation
+    const confirmResults = await cognito.confirmSignUp(params, function(err, data) {
+      if (err) {
+        console.log('Error confirming sign-up:', err);
+
+      } else {
+        res.redirect('/login');
+      }
+    });
+
+  } catch (error) {
+    // Handle errors
+    console.error('Confirmation error:', error);
+    res.status(500).json({ message: 'Failed to confirm user' });
   }
 });
 
@@ -197,7 +227,7 @@ app.post('/register', async (req,res) => {
     console.log('User registered successfully:', data);
 
     // Send a success response back to the client
-    res.send('User registered successfully');
+    res.redirect('/confirm-registration');
   } catch (error) {
     // Handle errors
     console.error('Registration error:', error);
@@ -242,6 +272,11 @@ app.get('/index', async (req, res) => {
 // GET request for register page
 app.get('/register', (req, res) => {
     res.render('register.ejs')
+});
+
+// GET request for confirmation page
+app.get('/confirm-registration', (req, res) => {
+  res.render('confirmation.ejs');
 });
 
 // GET request for login page
@@ -410,6 +445,9 @@ app.post('/record-score', async (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+    res.render('login.ejs');
+});
 
 // Start the server
 app.listen(PORT, () => {
