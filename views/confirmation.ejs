@@ -1,0 +1,11 @@
+<%- include("templates/header.ejs") %>
+
+<!-- Unique content to the ejs here -->
+<h1>Confirm Account</h1>
+<form action='/confirmation' method='post'>
+    <input name='username' type='text' placeholder='username'><br>
+    <input name='confirmation' type='confirmation' placeholder='confirmation code'>
+    <button>Submit</button>
+</form>
+
+<%- include("templates/footer.ejs") %>
