@@ -271,7 +271,6 @@ app.get('/get-leaderboard', (req, res) => {
       console.error('Unable to get tasks. Error JSON:', JSON.stringify(err, null, 2));
       res.status(500).send('Error getting tasks');
     } else {
-      console.log('Get tasks successful:', data.Items);
       res.status(200).json(data.Items); // Return tasks as JSON response
     }
   });
