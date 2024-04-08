@@ -294,6 +294,7 @@ app.get('/leaderboard', (req, res) => {
     res.render('leaderboard.ejs')
 });
 
+// GET request for leaderboard page
 app.get('/get-leaderboard', (req, res) => {
   // Get the start date of the current week
   const currentDateTime = new Date();
@@ -320,22 +321,6 @@ app.get('/get-leaderboard', (req, res) => {
     }
   });
 });
-// GET request for leaderboard page
-// app.get('/get-leaderboard', (req, res) => {
-//     // DynamoDB params
-//     const params = {
-//       TableName: 'comp3962-actor-match-weekly-score',
-//     };
-//   // Scan DynamoDB table to get all items
-//   docClient.scan(params, (err, data) => {
-//     if (err) {
-//       console.error('Unable to get tasks. Error JSON:', JSON.stringify(err, null, 2));
-//       res.status(500).send('Error getting tasks');
-//     } else {
-//       res.status(200).json(data.Items); // Return tasks as JSON response
-//     }
-//   });
-// });
 
 // POST request for recording score to DynamoDB
 app.post('/record-score', async (req, res) => {
