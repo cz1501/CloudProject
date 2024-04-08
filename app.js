@@ -277,6 +277,7 @@ app.get('/get-leaderboard', (req, res) => {
   });
 });
 
+// POST request for recording score to DynamoDB
 app.post('/record-score', async (req, res) => {
   if (req.session.idToken) {
     const userInfo = decodeIdToken(req.session.idToken);
@@ -284,27 +285,118 @@ app.post('/record-score', async (req, res) => {
     const username = req.session.username;
     const userID = userInfo.userSub;
 
+    // Get the current date in ISO format
+    const currentDate = new Date().toISOString().split('T')[0];
+
     const params = {
       TableName: 'comp3962-actor-match-scores',
       Item: {
         'userID': userID,
         'Username': username,
-        'Score': score
+        'Score': score,
+        'Date': currentDate // Add the current date to the item
       }
     };
 
     // // Logic to write data to DynamoDB using AWS SDK
     docClient.put(params, (err, data) => {
       if (err) {
-        console.error('Unable to write to DynamoDB:', err);
+        console.error('Unable to write to actor-match-scores:', err);
         res.sendStatus(500); // Send error response
       } else {
-        console.log('Successfully wrote to DynamoDB:', data);
+        console.log('Successfully wrote to actor-match-scores');
         res.sendStatus(200); // Send success response
       }
     });
   }
 });
+
+// POST request for updating weekly score in DynamoDB
+app.post('/update-weekly-score', async (req, res) => {
+  if (req.session.idToken) {
+    const userInfo = decodeIdToken(req.session.idToken);
+    const score = req.body.score;
+    const userID = userInfo.userSub;
+    const username = req.session.username;
+
+    // Get the start date of the current week
+    const currentDate = new Date();
+    const startOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
+
+    // Format the start date of the week
+    const formattedDate = startOfWeek.toISOString().split('T')[0]; // Extract year, month, and day
+
+    // Check if the user already has an entry in the weekly score table
+    const getParams = {
+      TableName: 'comp3962-actor-match-weekly-score',
+      Key: {
+        'userID': userID,
+        'WeekStartDate': formattedDate
+      }
+    };
+
+    docClient.get(getParams, async (err, data) => {
+      if (err) {
+        console.error('Error retrieving weekly score:', err);
+        res.sendStatus(500); // Send error response
+      } else {
+        if (data.Item) {
+          // User entry exists, update the total score
+          const currentTotalScore = data.Item['total-score'] || 0;
+          const updatedTotalScore = currentTotalScore + score;
+          const updateParams = {
+            TableName: 'comp3962-actor-match-weekly-score',
+            Key: {
+              'userID': userID,
+              'WeekStartDate': formattedDate
+            },
+            UpdateExpression: 'set #ts = :s', // Update total score only
+            ExpressionAttributeNames: {
+              '#ts': 'total-score'
+            },
+            ExpressionAttributeValues: {
+              ':s': updatedTotalScore
+            },
+            ReturnValues: 'UPDATED_NEW'
+          };
+
+          docClient.update(updateParams, (err, data) => {
+            if (err) {
+              console.error('Error updating weekly score:', err);
+              res.sendStatus(500); // Send error response
+            } else {
+              console.log('Successfully updated weekly score');
+              res.sendStatus(200); // Send success response
+            }
+          });
+        } else {
+          // User entry doesn't exist, create a new entry
+          const putParams = {
+            TableName: 'comp3962-actor-match-weekly-score',
+            Item: {
+              'userID': userID,
+              'WeekStartDate': formattedDate,
+              'total-score': score,
+              'username': username,
+            }
+          };
+
+          docClient.put(putParams, (err, data) => {
+            if (err) {
+              console.error('Error creating weekly score entry:', err);
+              res.sendStatus(500); // Send error response
+            } else {
+              console.log('Successfully created weekly score entry:', data);
+              res.sendStatus(200); // Send success response
+            }
+          });
+        }
+      }
+    });
+  }
+});
+
+
 
 // Start the server
 app.listen(PORT, () => {
